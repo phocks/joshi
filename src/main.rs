@@ -32,6 +32,6 @@ async fn run_script() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
   HttpServer::new(|| App::new().route("/", web::get().to(run_script)))
-    .bind("127.0.0.1:3000")?
+    .bind("127.0.0.1:8000")?
     .run().await
 }
