@@ -45,7 +45,7 @@ async fn webhook(_: String) -> impl Responder {
     .expect("Failed to execute command");
 
   // let output_str = String::from_utf8_lossy(&output.stdout).to_string();
-  let status = cmd.wait().expect("Failed to wait for command");
+  let _status = cmd.wait().expect("Failed to wait for command");
 
   HttpResponse::Ok().body("output_str")
 }
