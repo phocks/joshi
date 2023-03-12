@@ -35,6 +35,7 @@ async fn webhook(req_body: String) -> impl Responder {
   let script_path = current_dir.join("get-build-deploy.sh");
 
   let output = Command::new("sh")
+    .arg("-c")
     .arg(script_path)
     .output()
     .expect("Failed to execute command");
