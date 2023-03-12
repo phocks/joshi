@@ -1,9 +1,24 @@
 use std::env;
 use std::path::Path;
-use actix_web::{ web, App, HttpResponse, HttpServer, Responder };
+use actix_web::{ web, App, HttpResponse, HttpServer, Responder, post, get };
 use std::process::Command;
+use serde::Serialize;
 
-async fn run_script() -> impl Responder {
+#[derive(Serialize)]
+struct MyResponse {
+  message: String,
+}
+
+#[get("/")]
+async fn index() -> impl Responder {
+  let response = MyResponse {
+    message: "Hello, World!".to_string(),
+  };
+  HttpResponse::Ok().json(response)
+}
+
+#[post("/trigger123")]
+async fn webhook(req_body: String) -> impl Responder {
   // Get the current user's home directory
   let home_dir = match dirs::home_dir() {
     Some(home_dir) => home_dir,
@@ -31,7 +46,9 @@ async fn run_script() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-  HttpServer::new(|| App::new().route("/", web::get().to(run_script)))
-    .bind("127.0.0.1:8000")?
+  println!("Should listen on 0.0.0.0:8000");
+
+  HttpServer::new(|| App::new().service(webhook).service(index))
+    .bind("0.0.0.0:8000")?
     .run().await
 }
